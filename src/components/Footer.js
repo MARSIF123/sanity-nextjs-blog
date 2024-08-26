@@ -60,11 +60,16 @@ export default function Footer({ logoText, categoryLinks, socialLinks }) {
           </div>
           <div className="flex justify-center space-x-4 pt-4 lg:col-end-13 lg:pt-0">
             {socialLinks.map((link) => {
+              console.log(link.link);
               return (
                 <Link
                   key={link._id}
                   rel="noopener noreferrer"
-                  href={link.link}
+                  href={
+                    link.link.startsWith("http")
+                      ? link.link
+                      : `https://${link.link}`
+                  }
                   title={link.text}
                   target="_blank"
                   className="flex h-10 w-10 items-center justify-center rounded-full dark:bg-violet-400 dark:text-gray-900"
