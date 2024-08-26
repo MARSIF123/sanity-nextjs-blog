@@ -1,6 +1,3 @@
-// ./app/(blog)/posts/[slug]/page.tsx
-
-import { QueryParams } from "next-sanity";
 import { notFound } from "next/navigation";
 
 import { POSTS_QUERY, POST_QUERY } from "@/sanity/lib/queries";
@@ -17,6 +14,7 @@ export async function generateStaticParams() {
   );
 
   return posts.map((post) => ({
+    category: "posts",
     slug: post?.slug?.current,
   }));
 }
@@ -30,4 +28,21 @@ export default async function Page({ params }) {
     return notFound();
   }
   return <Post post={post} />;
+}
+
+export const dynamicParams = false;
+
+export async function generateMetadata({ params }) {
+  const post = await sanityFetch({ query: POST_QUERY, params });
+
+  return {
+    title: post?.title,
+    description: post?.excerpt,
+    openGraph: {
+      type: "website",
+      title: post?.title,
+      description: post?.excerpt,
+      url: `/${post?.slug?.current}`,
+    },
+  };
 }
